@@ -1,119 +1,53 @@
 import javax.swing.*;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 public class Main {
 
-    static SistemaDeCadastros cadastros = new SistemaDeCadastros("Admin","Admin");
+    static Tela tela = new Tela();
+    static SistemaColtec sistemaColtec = new SistemaColtec();
 
     public static void main(String[] args){
-        boolean ERRO = true;
+        Usuario user;
+        Integer confirm, retorno;
+        boolean MENU_LOGIN_CONTINUE = true, MENU_INICIAL_CONTINUE = true;
 
-        do{
-            String usuario = JOptionPane.showInputDialog(null,"Digite Seu Nome", "Login", JOptionPane.PLAIN_MESSAGE);
-            if(cadastros.buscarUsuario(usuario)) {
+        do {
+
+            retorno = sistemaColtec.inicializar();
+
+            if(retorno == JOptionPane.YES_OPTION){
+
+                user = sistemaColtec.efetuarLogin();
+
                 do {
-                    String senha = JOptionPane.showInputDialog(null,"Senha");
-                    if(cadastros.validarSenha(senha)){
-                        do {
-                            abrirOpcoes(cadastros.obterTipoUser(usuario));
-                            ERRO = (JOptionPane.showConfirmDialog(null,"Continue") == 0);
-                        }while (ERRO);
-                    }else{
-                        JOptionPane.showMessageDialog(null, "Senha Invalida - Tente Novamente", "SENHA INCORRETA", JOptionPane.ERROR_MESSAGE);
+                    sistemaColtec.menu(user);
+
+                    confirm = tela.inputConfirmaca("Manter Logado?");
+                    if (confirm == JOptionPane.OK_OPTION) {
+                        MENU_LOGIN_CONTINUE = false;
+                    } else {
+                        tela.output("Retornando a tela inicial", "Sistema Coltec" );
                     }
-                }while (ERRO);
-            } else{
-                JOptionPane.showMessageDialog(null, "User Invalido - Tente Novamente", "USUARIO NÃO ENCONTRADO", JOptionPane.ERROR_MESSAGE);
+                }while(MENU_LOGIN_CONTINUE);
+
+            }else if(retorno == JOptionPane.NO_OPTION) {
+
+                do {
+                    sistemaColtec.exibirReservas();
+
+                    confirm = tela.inputConfirmaca("Continuar Visualizando? ");
+                    if (confirm == JOptionPane.OK_OPTION) {
+                        MENU_LOGIN_CONTINUE = false;
+                    } else {
+                        tela.output("Retornando a tela inicial", "Sistema Coltec" );
+                    }
+                }while(MENU_LOGIN_CONTINUE);
+
+            }else {
+                MENU_INICIAL_CONTINUE = false;
             }
-        }while (ERRO);
-    }
 
-    public  static void abrirOpcoes(String opcao){
-
-        switch (opcao){
-            case "Admin":
-                funcoesAdministrativas();
-                break;
-            case "Professor":
-
-                break;
-            case "Coordenador":
-
-                break;
-            default:
-        }
+        }while (MENU_INICIAL_CONTINUE);
 
     }
 
-    public static void funcoesAdministrativas(){
-        String opcao;
-
-        Object[] funcoesSistema = {"Cadastrar Usuarios", "Cadastrar Salas", "Sair"};
-        opcao = (String) JOptionPane.showInputDialog(null, "Escolha uma Opção",
-                "Cadastro de Dados", JOptionPane.PLAIN_MESSAGE, null, funcoesSistema, "Cadastrar Usuario");
-
-        switch (opcao){
-
-            case "Cadastrar Usuarios":
-                Object[] tiposUsuarios = {"Aluno", "Professor", "Coordenador", "Sair"};
-                opcao = (String) JOptionPane.showInputDialog(null, "Escolha uma Opção",
-                        "Cadastro de Usuario", JOptionPane.PLAIN_MESSAGE, null, tiposUsuarios, "Coordenador");
-
-                switch (opcao){
-
-                    case "Aluno":
-                        cadastros.cadastrarAluno(JOptionPane.showInputDialog("Nome Aluno"),
-                                JOptionPane.showInputDialog("CPF"),
-                                Integer.parseInt(JOptionPane.showInputDialog("Idade")),
-                                JOptionPane.showInputDialog("Matricula"),
-                                JOptionPane.showInputDialog("Curso"));
-                        break;
-                    case "Professor":
-                        cadastros.cadastrarProfessor(JOptionPane.showInputDialog("Nome Aluno"),
-                                JOptionPane.showInputDialog("CPF"),
-                                Integer.parseInt(JOptionPane.showInputDialog("Idade")),
-                                JOptionPane.showInputDialog("Matricula"),
-                                JOptionPane.showInputDialog("Materia Ministrada"),
-                                JOptionPane.showInputDialog("Departamento"),
-                                JOptionPane.showInputDialog("Crie Uma Senha"));
-                        break;
-                    case "Coordenador":
-                        cadastros.cadastrarCoordenador(JOptionPane.showInputDialog("Nome Coordenador"),
-                                JOptionPane.showInputDialog("CPF"),
-                                Integer.parseInt(JOptionPane.showInputDialog("Idade")),
-                                JOptionPane.showInputDialog("Matricula"),
-                                JOptionPane.showInputDialog("Materia Ministrada"),
-                                JOptionPane.showInputDialog("Departamento"),
-                                JOptionPane.showInputDialog("Cargo Coordenacão"),
-                                JOptionPane.showInputDialog("Crie Uma Senha"));
-                        break;
-                    default:
-                }
-                break;
-
-            case "Cadastrar Salas":
-
-                Object[] tiposSala = {"Sala Convencional", "Sala Laboratorio", "Sair"};
-                opcao = (String) JOptionPane.showInputDialog(null, "Escolha uma Opção",
-                        "Cadastro de Salas", JOptionPane.PLAIN_MESSAGE, null, tiposSala, "Sala Convencional");
-
-                switch (opcao){
-                    case "Sala Convencional":
-                        cadastros.cadastrarSalaConvencional(Integer.parseInt(JOptionPane.showInputDialog("Capacidade Sala")),
-                                Integer.parseInt(JOptionPane.showInputDialog("Numero da Sala")));
-                        break;
-                    case "Sala Laboratorio":
-                        cadastros.cadastrarSalaLaboratorio(Integer.parseInt(JOptionPane.showInputDialog("Capacidade Sala")),
-                                Integer.parseInt(JOptionPane.showInputDialog("Numero da Sala")));
-                        break;
-                    default:
-                }
-                break;
-            default:
-
-        }
-    }
 }

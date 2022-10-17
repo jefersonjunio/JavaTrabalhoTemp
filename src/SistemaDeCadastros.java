@@ -1,60 +1,130 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SistemaDeCadastros {
+public class SistemaDeCadastros implements IRetornarVetores{
 
-    //-------------------------------------- Atribultos Reserva ----------------------------------------------------//
+    //-------------------------------------- Atribultos Sistema ----------------------------------------------------//
 
-    private String usuarioPadrao;
-    private String chavePadrao;
+    private Coordenador usuarioPadrao;
 
     private ArrayList<Professor> professoresCadastrados = new ArrayList<>();
     private ArrayList<Aluno> alunosCadastrados = new ArrayList<>();
     private ArrayList<Sala> salasCadastradas = new ArrayList<>();
 
-    //-------------------------------------- Atribultos Reserva ----------------------------------------------------//
+    //------------------------------------ Fim Atribultos Sistema --------------------------------------------------//
 
 
 
     //--------------------------------------- Metodo Construtor ----------------------------------------------------//
 
-    SistemaDeCadastros(String userPadrao, String passwordPadrao){
-        this.usuarioPadrao = userPadrao;
-        this.chavePadrao = passwordPadrao;
+    public SistemaDeCadastros(){
+        this.usuarioPadrao = new Coordenador("Admin");
     }
 
     //------------------------------------- Fim Metodo Construtor --------------------------------------------------//
 
 
+
+    //----------------------------------------- Metodos Gets -------------------------------------------------------//
+
+    public ArrayList<Sala> getSalasCadastradas() {
+        return salasCadastradas;
+    }
+
+    public ArrayList<Professor> getProfessoresCadastrados(){
+        return professoresCadastrados;
+    }
+
+    public ArrayList<Aluno> getAlunosCadastrados(){return alunosCadastrados;}
+
+    //--------------------------------------- Fim Metodos Gets -----------------------------------------------------//
+
+
+
+    //---------------------------------------- Funcionalidade ------------------------------------------------------//
+
+    public void funcionalidadesSistema(){
+        Integer opcao;
+
+        Tela tela = new Tela();
+
+        Object[] funcoesSistema = {"Cadastrar Usuarios", "Cadastrar Salas", "Sair"};
+        Object[] tiposUsuarios = {"Aluno", "Professor", "Coordenador", "Sair"};
+        Object[] tiposSala = {"Sala Convencional", "Sala Laboratorio", "Sair"};
+
+        opcao = tela.inputBotton("Selecione uma opção", "Cadastros Dados", "Opção Invalida", funcoesSistema);
+
+        switch (opcao){
+
+            case JOptionPane.YES_OPTION:
+
+                opcao = tela.inputBotton("Selecione uma opção", "Cadastros Usuarios", "Opção Invalida", tiposUsuarios);
+
+                switch (opcao){
+
+                    case JOptionPane.YES_OPTION:
+                        cadastrarAluno();
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        cadastrarProfessor();
+                        break;
+                    case JOptionPane.CANCEL_OPTION:
+                        cadastrarCoordenador();
+                        break;
+                    default:
+
+                }
+                break;
+
+            case JOptionPane.NO_OPTION:
+
+                opcao = tela.inputBotton("Selecione o tipo de sala", "Cadastro de Salas", "Seleção Invalida", tiposSala);
+
+                switch (opcao){
+                    case JOptionPane.YES_OPTION:
+                        cadastrarSalaConvencional();
+                        break;
+                    case JOptionPane.NO_OPTION:
+                        cadastrarSalaLaboratorio();
+                        break;
+                    default:
+                }
+                break;
+
+            default:
+
+        }
+    }
+
+    //-------------------------------------- Fim Funcionalidade ----------------------------------------------------//
+
+
+
     //--------------------------------------- Metodos Cadastros ----------------------------------------------------//
 
-    public void cadastrarAluno(String nome, String cpf, Integer idade, String matricula, String curso){
-        Aluno novo = new Aluno(nome,cpf,idade,matricula,curso);
+    public void cadastrarAluno(){
+        Aluno novo = new Aluno("Novo Aluno");
         alunosCadastrados.add(novo);
     }
 
-    public void cadastrarProfessor(String nome, String cpf, Integer idade, String matricula,
-                                   String materiaMinistrada, String departamento, String senhaAcesso){
-
-        Professor novo = new Professor(nome,cpf,idade,matricula,materiaMinistrada,departamento,senhaAcesso);
-        professoresCadastrados.add(novo);
-
-    }
-
-    public void cadastrarCoordenador(String nome, String cpf, Integer idade, String matricula,
-                                     String materiaMinistrada, String departamento, String cargoCoordenacao, String senhaAcesso){
-
-        Coordenador novo = new Coordenador(nome, cpf, idade, matricula, materiaMinistrada, departamento, cargoCoordenacao, senhaAcesso);
+    public void cadastrarProfessor(){
+        Professor novo = new Professor("Novo Professor");
         professoresCadastrados.add(novo);
     }
 
-    public void cadastrarSalaConvencional(Integer capacidade, Integer numeroSala){
-        Sala nova = new SalaConvencional(capacidade, numeroSala);
+    public void cadastrarCoordenador(){
+        Coordenador novo = new Coordenador("Novo Coordenador");
+        professoresCadastrados.add(novo);
+    }
+
+    public void cadastrarSalaConvencional(){
+        Sala nova = new SalaConvencional("Nova Sala Convencional");
         salasCadastradas.add(nova);
     }
 
-    public void cadastrarSalaLaboratorio(Integer capacidade, Integer numeroSala){
-        Sala nova = new SalaLaboratorio(capacidade, numeroSala);
+    public void cadastrarSalaLaboratorio(){
+        Sala nova = new SalaLaboratorio("Nova Sala Laboratorio");
         salasCadastradas.add(nova);
     }
 
@@ -62,39 +132,17 @@ public class SistemaDeCadastros {
 
 
 
-    //--------------------------------------- Metodo Verificador ----------------------------------------------------//
+    //----------------------------------------- Metodos Buscas ----------------------------------------------------//
 
-    public boolean buscarUsuario(String usuario){
-        boolean retorno = false;
+    public Usuario buscarUsuario(String usuario){
+        Usuario retorno = null;
 
-        if(Objects.equals(usuario, this.usuarioPadrao)){
-
-            retorno = true;
-
+        if(usuarioPadrao.getNome().equals(usuario)){
+            retorno = usuarioPadrao;
         }else{
-
             for(Professor user : professoresCadastrados){
                 if(user.validarUser(usuario)){
-                    retorno = true;
-                }
-            }
-
-        }
-
-        return retorno;
-    }
-
-    public boolean validarSenha(String senha){
-        boolean retorno = false;
-
-        if(Objects.equals(senha, this.chavePadrao)){
-
-            retorno = true;
-
-        }else{
-            for(Professor user : professoresCadastrados){
-                if(user.validarSenha(senha)){
-                    retorno = true;
+                    retorno = user;
                 }
             }
         }
@@ -102,24 +150,6 @@ public class SistemaDeCadastros {
         return retorno;
     }
 
-    public String obterTipoUser(String usuario){
-         String instancia = "null";
-
-         if(usuario.equals(this.usuarioPadrao)){
-             instancia = "Admin";
-         }else{
-             for(Professor user : professoresCadastrados){
-                 if(user.validarUser(usuario)){
-                     instancia = String.valueOf(user.getClass());
-                 }
-             }
-         }
-         return instancia;
-    }
-
-
-
-    //------------------------------------- Fim Metodo Verificador -------------------------------------------------//
-
+    //--------------------------------------- Fim Metodos Buscas --------------------------------------------------//
 
 }

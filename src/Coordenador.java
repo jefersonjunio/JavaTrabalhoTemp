@@ -10,15 +10,26 @@ public class Coordenador extends Professor{
 
     //--------------------------------------- Metodo Construtor ----------------------------------------------------//
 
-    public Coordenador(String nome, String cpf, Integer idade, String codigoProfessor,
-                       String materiaMinistrada, String departamento, String cargoCoordenacao, String senhaAcesso){
-
-        super(nome, cpf, idade,codigoProfessor, materiaMinistrada, departamento, senhaAcesso);
-        this.setCargoCoordenacao(cargoCoordenacao);
+    public Coordenador(String titleUser){
+        super(titleUser);
+        if(!titleUser.equals("Admin")){
+            this.setCargoCoordenacao(receberCargoCoordenacao(titleUser));
+        }
     }
 
     //------------------------------------- Fim Metodo Construtor --------------------------------------------------//
 
+
+    //------------------------------------- Metodos Receber Dados --------------------------------------------------//
+
+    public String receberCargoCoordenacao(String titleUser) {
+        Tela tela = new Tela();
+        String cargoCoordenacao;
+        cargoCoordenacao = tela.inputString_NotReturnNull("Digite o cargo", titleUser, "Cargo Invalido");
+        return cargoCoordenacao;
+    }
+
+    //----------------------------------- Fim Metodos Receber Dados ------------------------------------------------//
 
 
     //----------------------------------------- Metodos Sets -------------------------------------------------------//

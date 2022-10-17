@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -12,6 +11,7 @@ public abstract class Sala {
     private  Integer numSala = 0;
     private  Integer capacidade;
     private  Integer numReservasRealizadas = 0;
+    private  boolean salaDisponivel;
     private  ArrayList<Reserva> reservas = new ArrayList<>(numMaxReservas);
 
     //-------------------------------------- Fim Atribultos Sala ---------------------------------------------------//
@@ -20,10 +20,11 @@ public abstract class Sala {
 
     //--------------------------------------- Metodo Construtor ----------------------------------------------------//
 
-    Sala(char tipoSala, Integer capacidade, Integer numSala){
+    Sala(char tipoSala,String titleSala){
         this.setTipoSala(tipoSala);
-        this.setCapacidade(capacidade);
-        this.setNumSala(numSala);
+        this.setCapacidade(receberCapacidade(titleSala));
+        this.setNumSala(receberNumSala(titleSala));
+        this.setSalaDisponivel(true);
     }
 
     //------------------------------------- Fim Metodo Construtor --------------------------------------------------//
@@ -48,6 +49,10 @@ public abstract class Sala {
         return numReservasRealizadas;
     }
 
+    public boolean isSalaDisponivel() {
+        return salaDisponivel;
+    }
+
     //--------------------------------------- Fim Metodos Gets -----------------------------------------------------//
 
 
@@ -70,6 +75,10 @@ public abstract class Sala {
         this.numReservasRealizadas = numReservasRealizadas;
     }
 
+    public void setSalaDisponivel(boolean salaDisponivel) {
+        this.salaDisponivel = salaDisponivel;
+    }
+
     //--------------------------------------- Fim Metodos Sets -----------------------------------------------------//
 
 
@@ -87,6 +96,8 @@ public abstract class Sala {
             retorno = true;
         }
 
+        setSalaDisponivel(retorno);
+
         return retorno;
     }
 
@@ -102,10 +113,31 @@ public abstract class Sala {
             }
         }
 
+        setSalaDisponivel(retorno);
+
         return retorno;
     }
 
     //------------------------------------- Fim Adicionar Reserva --------------------------------------------------//
+
+
+    //------------------------------------- Metodos Receber Dados --------------------------------------------------//
+
+    public int receberCapacidade(String titleSala){
+        Tela tela = new Tela();
+        int capacidadeSala;
+        capacidadeSala = tela.inputInt_NotReturnNull("Digite a capacidade", titleSala,"Capacidade Invalida");
+        return capacidadeSala;
+    }
+
+    public int receberNumSala(String titleSala){
+        Tela tela = new Tela();
+        int numSala;
+        numSala = tela.inputInt_NotReturnNull("Digite o numero sala", titleSala,"Numero Sala Invalido");
+        return numSala;
+    }
+
+    //----------------------------------- Fim Metodos Receber Dados ------------------------------------------------//
 
 
 

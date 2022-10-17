@@ -8,6 +8,7 @@ public abstract class Usuario {
     private String cpf;
     private Integer idade;
     private String codigoUsuario;
+    private String matricula;
 
     //------------------------------------- Fim Atribultos Usuario -------------------------------------------------//
 
@@ -15,12 +16,17 @@ public abstract class Usuario {
 
     //--------------------------------------- Metodo Construtor ----------------------------------------------------//
 
-    public Usuario(String nome, String cpf, Integer idade){
-        this.nome = nome;
-        this.cpf = cpf;
-        this.setIdade(idade);
-        setNumUsuarios(getNumUsuarios() + 1);
-        this.setCodigoUsuario(numUsuarios);
+    public Usuario(String titleUser){
+        if(titleUser.equals("Admin")){
+            this.setNome("Admin");
+        }else{
+            this.setNome(receberNome(titleUser));
+            this.setCpf(receberCpf(titleUser));
+            this.setIdade(receberIdade(titleUser));
+            this.setMatricula(receberMatricula(titleUser));
+            setNumUsuarios(getNumUsuarios() + 1);
+            this.setCodigoUsuario(numUsuarios);
+        }
     }
 
     //------------------------------------- Fim Metodo Construtor --------------------------------------------------//
@@ -50,6 +56,10 @@ public abstract class Usuario {
         this.idade = idade;
     }
 
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
+    }
+
     //--------------------------------------- Fim Metodos Gets -----------------------------------------------------//
 
 
@@ -76,8 +86,54 @@ public abstract class Usuario {
         return idade;
     }
 
+    public String getMatricula() {
+        return matricula;
+    }
 
     //--------------------------------------- Fim Metodos Gets -----------------------------------------------------//
+
+
+
+    //------------------------------------- Metodos Receber Dados --------------------------------------------------//
+
+    public String receberNome(String titleUser){
+        Tela tela = new Tela();
+        String nome;
+        nome = tela.inputString_NotReturnNull("Digite Nome",titleUser,"Nome Invalido");
+        return nome;
+    }
+
+    public String receberCpf(String titleUser){
+        Tela tela = new Tela();
+        String cpf;
+        cpf = tela.inputString_NotReturnNull("Digite CPF",titleUser,"CPF Invalido");
+        return cpf;
+    }
+
+    public int receberIdade(String titleUser){
+        Tela tela = new Tela();
+        int idade;
+        boolean ERRO = false;
+
+        idade = tela.inputInt_NotReturnNull("Digite Idade", titleUser, "Idade Invalido");
+        ERRO = idade < 15;
+
+        while (ERRO){
+            tela.outputErro("Idade Invalida - Tente Novamente","Idade Invalida");
+            idade = tela.inputInt_NotReturnNull("Digite Nome",titleUser,"Idade Invalido");
+        }
+
+        return idade;
+    }
+
+    public String receberMatricula(String titleUser){
+        Tela tela = new Tela();
+        String matricula;
+        matricula = tela.inputString_NotReturnNull("Digite Matricula",titleUser,"Matricula Incorreta");
+        return matricula;
+    }
+
+    //----------------------------------- Fim Metodos Receber Dados ------------------------------------------------//
 
 
 
@@ -90,6 +146,10 @@ public abstract class Usuario {
         return this.nome.equals(usuarioComparado.nome)
                 && this.cpf.equals(usuarioComparado.cpf)
                 && this.idade.equals(usuarioComparado.idade);
+    }
+
+    public boolean validarSenha(String senha){
+        return false;
     }
 
 

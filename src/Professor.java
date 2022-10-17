@@ -2,7 +2,6 @@ public class Professor extends Usuario{
 
     //-------------------------------------- Atribultos Professor --------------------------------------------------//
 
-    private String matriculaProfessor;
     private String materiaMinistrada;
     private String departamento;
     private String senhaAcesso;
@@ -13,14 +12,16 @@ public class Professor extends Usuario{
 
     //--------------------------------------- Metodo Construtor ----------------------------------------------------//
 
-    public Professor(String nome, String cpf, Integer idade, String matriculaProfessor,
-                     String materiaMinistrada, String departamento, String senhaAcesso) {
+    public Professor(String titleUser) {
+        super(titleUser);
 
-        super(nome, cpf, idade);
-        this.setMatriculaProfessor(matriculaProfessor);
-        this.setMateriaMinistrada(materiaMinistrada);
-        this.setDepartamento(departamento);
-        this.setSenhaAcesso(senhaAcesso);
+        if(titleUser.equals("Admin")){
+            this.setSenhaAcesso("admin");
+        }else {
+            this.setMateriaMinistrada(recebermateriaMinistrada(titleUser));
+            this.setDepartamento(receberdepartamento(titleUser));
+            this.setSenhaAcesso(recebersenhaAcesso(titleUser));
+        }
     }
 
     //------------------------------------- Fim Metodo Construtor --------------------------------------------------//
@@ -28,10 +29,6 @@ public class Professor extends Usuario{
 
 
     //----------------------------------------- Metodos Gets -------------------------------------------------------//
-
-    public String getMatriculaProfessor() {
-        return matriculaProfessor;
-    }
 
     public String getMateriaMinistrada() {
         return materiaMinistrada;
@@ -52,10 +49,6 @@ public class Professor extends Usuario{
 
     //----------------------------------------- Metodos Sets -------------------------------------------------------//
 
-    private void setMatriculaProfessor(String matriculaProfessor){
-        this.matriculaProfessor = matriculaProfessor;
-    }
-
     private void setMateriaMinistrada(String materiaMinistrada) {
         this.materiaMinistrada = materiaMinistrada;
     }
@@ -69,6 +62,33 @@ public class Professor extends Usuario{
     }
 
     //--------------------------------------- Fim Metodos Sets -----------------------------------------------------//
+
+
+
+    //------------------------------------- Metodos Receber Dados --------------------------------------------------//
+
+    public String recebermateriaMinistrada(String titleUser){
+        Tela tela = new Tela();
+        String materiaMinistrada;
+        materiaMinistrada = tela.inputString_NotReturnNull("Digite Materia Ministrada",titleUser,"Materia Invalida");
+        return materiaMinistrada;
+    }
+
+    public String receberdepartamento(String titleUser){
+        Tela tela = new Tela();
+        String departamento;
+        departamento = tela.inputString_NotReturnNull("Digite Departamento",titleUser,"Departamento Invalido");
+        return departamento;
+    }
+
+    public String recebersenhaAcesso(String titleUser) {
+        Tela tela = new Tela();
+        String senhaAcesso;
+        senhaAcesso = tela.inputString_NotReturnNull("Digite Uma Senha", titleUser, "Senha Invalida");
+        return senhaAcesso;
+    }
+
+    //----------------------------------- Fim Metodos Receber Dados ------------------------------------------------//
 
 
 
